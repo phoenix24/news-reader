@@ -1,3 +1,5 @@
+package org.TBandar.Finder;
+
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -11,7 +13,7 @@ public class SnippetFinderTest {
 
         String query = "";
         String document = "";
-        //SnippetFinder snippet = new DistaceFinder(document);
+        //org.TBandar.Finder.SnippetFinder snippet = new DistaceFinder(document);
 
         String expected = "";
         //assertThat(snippet.find(query), is(expected));
