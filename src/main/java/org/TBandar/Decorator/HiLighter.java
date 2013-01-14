@@ -49,7 +49,6 @@ public abstract class HiLighter {
                 lhilighted = hilighted.toLowerCase();
             }
         }
-        hilighted = hilighted.replaceAll(oTag + ' ' + cTag, " ");
         return hilighted;
     }
 }
