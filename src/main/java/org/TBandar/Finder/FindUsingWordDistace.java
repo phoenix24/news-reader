@@ -18,10 +18,6 @@ public class FindUsingWordDistace extends SnippetFinder {
 
     @Override
     public String find(String query, int snippetLength) {
-
-        //document is smaller than required default length.
-        if (document.length() <= snippetLength) return oDocument;
-
         query = query.toLowerCase();
         List<String> tokens = Lists.newArrayList(Splitter.on(" ").split(query));
 
@@ -37,7 +33,8 @@ public class FindUsingWordDistace extends SnippetFinder {
 
         int index = 0, qNumber = -1, qIndex = -1;
         for (String token : tokens) {
-            qIndex = 0; qNumber += 1;
+            qIndex = 0;
+            qNumber += 1;
             while ((index = document.indexOf(token, index + 1)) > -1 && index < document.length()) {
                 if (index > -1) occurrences[qNumber][qIndex++] = index;
             }
@@ -61,8 +58,8 @@ public class FindUsingWordDistace extends SnippetFinder {
      * We identify the smallest snippet of length greater that the required snippetLength,
      * and then trim out the noise words to fit the length criterion.
      *
-     * @param snippets snippets that have been identified.
-     * @param tokensCount number of query tokens
+     * @param snippets      snippets that have been identified.
+     * @param tokensCount   number of query tokens
      * @param snippetLength maximum required length of the snippet.
      * @return
      */
@@ -93,9 +90,30 @@ public class FindUsingWordDistace extends SnippetFinder {
         for (int i = 0; i < tokensCount; i++) {
             indices[i] = snippets[i][result];
         }
-        Arrays.sort(indices);
         Log.debug("snippet-relevant indices: {}", indices);
-        return new int[]{ indices[tokensCount - 1], indices[0] };
+        return trimSnippet(indices, snippetLength);
+    }
+
+    protected int[] trimSnippet(int[] indices, int snippetLength) {
+        Arrays.sort(indices);
+        int start = indices[0], stop = indices[indices.length - 1];
+        int diff = (snippetLength - (stop - start)) / 2;
+
+        Log.debug("remaining-length : {}, indices:{}", diff, Arrays.toString(indices));
+        while (diff != 0 && (stop - start < document.length())) {
+
+            //move the start index.
+            int u1diff = start - diff < 0 ? start : diff;
+            start -= u1diff;
+
+            //move the stop index.
+            int u2diff = stop + diff > document.length() ? document.length() - stop : diff;
+            stop += u2diff;
+
+            //evaluate how much more to expand.
+            diff = (2 * diff - u1diff - u2diff) / 2;
+        }
+        return new int[]{stop, start};
     }
 
     /**
@@ -115,7 +133,6 @@ public class FindUsingWordDistace extends SnippetFinder {
      * 105,
      * 27
      * 34
-     * ^
      * |---- this is the first snippet, or as I call it snippet-index 0.
      *
      *
@@ -125,7 +142,6 @@ public class FindUsingWordDistace extends SnippetFinder {
      * 105, 105,
      * 27,  127,
      * 34,  34,
-     * ^    ^
      * |    |-----this is the second snippet, or as I call it snippet-index 1.
      * |----------this is the first snippet, or as I call it snippet-index 0.
      *
@@ -133,7 +149,6 @@ public class FindUsingWordDistace extends SnippetFinder {
      * 105, 105, 105, 239, 239,  <-- mobile  (occurrences of the token).
      * 27 , 127, 127, 127, 217,  <-- phone
      * 34 , 34 , 131, 131, 131,  <-- cheap
-     * ^    ^     ^    ^    ^
      * |    |     |    |    |-------- fifth snippet, snippet-index 4.
      * |    |     |    |------------- fourth snippet, snippet-index 3.
      * |    |     |------------------ third  snippet, snippet-index 2.
@@ -152,7 +167,7 @@ public class FindUsingWordDistace extends SnippetFinder {
         do {
             for (int i = 0; i < qlength; i++) {
                 snippets[i][snippetCount] = occurances[i][tokenIndices[i]];
-                if (occurances[i][tokenIndices[i]] <= tokenSmallestValue && occurances[i][tokenIndices[i]+1] != -1) {
+                if (occurances[i][tokenIndices[i]] <= tokenSmallestValue && occurances[i][tokenIndices[i] + 1] != -1) {
                     tokenSmallestIndex = i;
                     tokenSmallestValue = occurances[i][tokenIndices[i]];
                 }
@@ -170,15 +185,14 @@ public class FindUsingWordDistace extends SnippetFinder {
      * Basically, returns true if any of the tokens has a next valid index present.,
      * such that it can be used to create a new snippet.
      *
-     * @param occurances
+     * @param occurrences
      * @param indexes
      * @return
      */
-    protected boolean isSnippetAvailable(int[][] occurances, int[] indexes) {
+    protected boolean isSnippetAvailable(int[][] occurrences, int[] indexes) {
         boolean available = false;
-
         for (int i = 0; i < indexes.length; i++) {
-            available |= occurances[i][indexes[i]+1] > -1;
+            available |= occurrences[i][indexes[i] + 1] > -1;
         }
         return available;
     }

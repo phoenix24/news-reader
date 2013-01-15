@@ -3,6 +3,7 @@ package org.TBandar.Finder;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -20,13 +21,13 @@ public class FindUsingWordDistanceTest {
                 "few companies provide products worth their money. Micromax, offer cheap mobile phones making " +
                 "with great product features. Which are durable and provide competing mobile phone features. " +
                 "Micromax makes, offers a good value for money, phones reliable, feature rich and cheap! " +
-                "and have been increasingly winning mobile market share, and customer loyalty.";
+                "and have been increasingly winning mobile market share and customer loyalty.";
     }
 
     @Test
     public void testHilightSnippetWithDefaultLength() {
         SnippetFinder snippet = new FindUsingWordDistace(document);
-        String expected = "mobile phones in the market few companies provide products worth their money. " +
+        String expected = "ap mobile phones in the market few companies provide products worth their money. " +
                 "Micromax, offer cheap";
 
         assertThat("find snippet, using default snippet length",
@@ -34,7 +35,7 @@ public class FindUsingWordDistanceTest {
                 is(expected));
 
         assertThat("length of the snippet is 100.",
-                100 - snippet.find(query).length(),
+                Math.abs(100 - snippet.find(query).length()),
                 lessThanOrEqualTo(10));
     }
 
@@ -48,14 +49,29 @@ public class FindUsingWordDistanceTest {
                 is(expected));
 
         assertThat("length of the snippet is 30.",
-                30 - snippet.find(query, 30).length(),
+                Math.abs(30 - snippet.find(query, 30).length()),
+                lessThanOrEqualTo(10));
+    }
+
+    @Test
+    public void testHilightSnippetWithLength150() {
+        SnippetFinder snippet = new FindUsingWordDistace(document);
+        String expected = "icromax, offer cheap mobile phones making with great product features. " +
+                "Which are durable and provide competing mobile phone features. Micromax makes,";
+
+        assertThat("find snippet, length 200.",
+                snippet.find(query, 150),
+                is(expected));
+
+        assertThat("length of the snippet is 200.",
+                Math.abs(150 - snippet.find(query, 150).length()),
                 lessThanOrEqualTo(10));
     }
 
     @Test
     public void testHilightSnippetWithLength200() {
         SnippetFinder snippet = new FindUsingWordDistace(document);
-        String expected = "mobile phones making with great product features. " +
+        String expected = "ap mobile phones making with great product features. " +
                 "Which are durable and provide competing mobile phone features. " +
                 "Micromax makes, offers a good value for money, phones reliable, feature rich and cheap!";
 
@@ -64,7 +80,7 @@ public class FindUsingWordDistanceTest {
                 is(expected));
 
         assertThat("length of the snippet is 200.",
-                200 - snippet.find(query, 200).length(),
+                Math.abs(200 - snippet.find(query, 200).length()),
                 lessThanOrEqualTo(10));
     }
 
@@ -77,8 +93,8 @@ public class FindUsingWordDistanceTest {
                 snippet.find("deep dish pizza"),
                 is(expected));
 
-//        assertThat("length of the snippet is 200.",
-//                100 - snippet.find(query, 100).length(),
-//                lessThanOrEqualTo(10));
+        assertThat("length of the snippet is 100.",
+                snippet.find(query, 100).length(),
+                equalTo(expected.length()));
     }
 }
