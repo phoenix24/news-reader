@@ -6,6 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -128,5 +129,17 @@ public class SnippetWordDistanceTest {
         int[] actual = finder.trimSnippet(new int[]{4, 34}, 40);
         int[] expected = new int[]{39, 0};
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void testIsSnippetAvailableWhenExists() {
+        SnippetWordDistace finder = new SnippetWordDistace(document.substring(0, 100));
+        assertTrue(finder.isSnippetAvailable(new int[][]{{3, 4, -1, -1}, {2, -1, -1, -1}}, new int[]{0, 0}));
+    }
+
+    @Test
+    public void testIsSnippetAvailableWhenNotExists() {
+        SnippetWordDistace finder = new SnippetWordDistace(document.substring(0, 100));
+        assertFalse(finder.isSnippetAvailable(new int[][]{{3, 4, -1, -1}, {2, -1, -1, -1}}, new int[]{1, 0}));
     }
 }
