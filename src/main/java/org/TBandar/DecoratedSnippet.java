@@ -5,21 +5,11 @@ import org.TBandar.Finder.SnippetFinder;
 
 public class DecoratedSnippet {
 
-    private String query;
     private HiLighter hiLighter;
     private SnippetFinder snippetFinder;
 
-    public DecoratedSnippet() {
-
-    }
-
     public DecoratedSnippet forSnippet(SnippetFinder snippetFinder) {
         this.snippetFinder = snippetFinder;
-        return this;
-    }
-
-    public DecoratedSnippet forQuery(String query) {
-        this.query = query;
         return this;
     }
 
@@ -28,8 +18,13 @@ public class DecoratedSnippet {
         return this;
     }
 
-    public String getDecoratedSnippet() {
-            String snippet = snippetFinder.find(query);
+    public String getDecoratedSnippet(String query) {
+        String snippet = snippetFinder.find(query);
+        return hiLighter.decorate(snippet, query);
+    }
+
+    public String getDecoratedSnippet(String query, int length) {
+        String snippet = snippetFinder.find(query, length);
         return hiLighter.decorate(snippet, query);
     }
 }
