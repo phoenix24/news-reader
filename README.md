@@ -21,55 +21,50 @@ Also, I think with little work and using jackson json annotation, it can be easi
 
 Project follows standard code layout as said by maven build, Please start by looking at the test-suite.
 
-project tree
---
-➜  snippet-finder git:(master) ✗ tree
-.
-|-- README.md
-|-- pom.xml
-|-- snippet-finder.iml
-`-- src
-    |-- main
-    |   |-- java
-    |   |   `-- org
-    |   |       `-- TBandar
-    |   |           |-- DecoratedSnippet.java
-    |   |           |-- Decorator
-    |   |           |   |-- HiLightWithHTML.java
-    |   |           |   |-- HiLightWithMarkUp.java
-    |   |           |   |-- HiLightWithQuotes.java
-    |   |           |   `-- HiLighter.java
-    |   |           |-- Finder
-    |   |           |   |-- SnippetFinder.java
-    |   |           |   `-- SnippetWordDistace.java
-    |   |           `-- exceptions
-    |   |               `-- InvalidSnippetException.java
-    |   `-- resources
-    `-- test
-        `-- java
-            `-- org
-                `-- TBandar
-                    |-- DecoratedSnippetTest.java
-                    |-- Decorator
-                    |   |-- HiLightWithHTMLTest.java
-                    |   |-- HiLightWithMarkUpTest.java
-                    |   `-- HiLightWithQuotesTest.java
-                    `-- Finder
-                        `-- SnippetWordDistanceTest.java
+### project tree ###
 
-15 directories, 16 files
+    ➜  snippet-finder git:(master) ✗ tree
+    .
+    |-- README.md
+    |-- pom.xml
+    |-- snippet-finder.iml
+    `-- src
+        |-- main
+        |   |-- java
+        |   |   `-- org
+        |   |       `-- TBandar
+        |   |           |-- DecoratedSnippet.java
+        |   |           |-- Decorator
+        |   |           |   |-- HiLightWithHTML.java
+        |   |           |   |-- HiLightWithMarkUp.java
+        |   |           |   |-- HiLightWithQuotes.java
+        |   |           |   `-- HiLighter.java
+        |   |           |-- Finder
+        |   |           |   |-- SnippetFinder.java
+        |   |           |   `-- SnippetWordDistace.java
+        |   |           `-- exceptions
+        |   |               `-- InvalidSnippetException.java
+        |   `-- resources
+        `-- test
+            `-- java
+                `-- org
+                    `-- TBandar
+                        |-- DecoratedSnippetTest.java
+                        |-- Decorator
+                        |   |-- HiLightWithHTMLTest.java
+                        |   |-- HiLightWithMarkUpTest.java
+                        |   `-- HiLightWithQuotesTest.java
+                        `-- Finder
+                            `-- SnippetWordDistanceTest.java
+
+    15 directories, 16 files
 
 
-build
---
+### build ###
 mvn clean package.
 
-
-test
---
+### test ###
 mvn test
 
-
-external dependencies
---
+### external dependencies ###
 jar dependencies are specificed in pom.xml, which includes JUnit, Hamcrest, Logback and Google Guava.
