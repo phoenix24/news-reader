@@ -20,7 +20,7 @@ public class FindUsingWordDistace extends SnippetFinder {
     public String find(String query, int length) {
 
         //document is smaller than required default length.
-        if (document.length() <= length) return document;
+        if (document.length() <= length) return oDocument;
 
         query = query.toLowerCase();
         List<String> tokens = Lists.newArrayList(Splitter.on(" ").split(query));
@@ -49,8 +49,8 @@ public class FindUsingWordDistace extends SnippetFinder {
 
         //find the most relevant snippet, in this case longest.
         int[] longestSnippet = calcRelevantSnippet(snippets, qlength);
-        String snippet = document.substring(longestSnippet[1], longestSnippet[0])
-                        + document.substring(longestSnippet[0]).split(" ")[0];
+        String snippet = oDocument.substring(longestSnippet[1], longestSnippet[0])
+                        + oDocument.substring(longestSnippet[0]).split(" ")[0];
 
         Log.debug("snippet-longest:{}, snippet-text:{}", Arrays.toString(longestSnippet), snippet);
         return snippet;
@@ -87,6 +87,9 @@ public class FindUsingWordDistace extends SnippetFinder {
     /**
      * Find all the snippets, in the said document.
      * We basically return the index positions for all the possible snippets possible.
+     * The basic advantage of doing this is that all the snippets identified thus far, can be used various
+     * algorithms to evaluate relevant snippets using natural language or other techniques.
+     *
      * Note: all of these snippets can also be treated as snippet windows., I realized term much later.
      *
      * ex. for these tokens - mobile, phone, cheap; their indexes in the document may be as follow -
@@ -139,7 +142,7 @@ public class FindUsingWordDistace extends SnippetFinder {
                     tokenSmallestIndex = i;
                     tokenSmallestValue = occurances[i][tokenIndices[i]];
                 }
-                System.out.println(Arrays.toString(snippets[i]));
+                Log.debug("snippet {}", Arrays.toString(snippets[i]));
             }
             snippetCount += 1;
             tokenIndices[tokenSmallestIndex]++;
