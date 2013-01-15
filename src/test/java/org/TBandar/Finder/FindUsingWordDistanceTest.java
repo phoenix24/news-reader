@@ -32,6 +32,10 @@ public class FindUsingWordDistanceTest {
         assertThat("find snippet, using default snippet length",
                     snippet.find(query),
                     is(expected));
+
+        assertThat("length of the snippet is 50.",
+                    snippet.find(query).length(),
+                    is(50));
     }
 
     @Test
@@ -42,8 +46,28 @@ public class FindUsingWordDistanceTest {
                 "Micromax makes, offers a good value for money, phones reliable, feature rich and cheap!";
 
         assertThat("find snippet, length 30.",
-                    snippet.find(query, 30),
-                    is(expected));
+                snippet.find(query, 30),
+                is(expected));
+
+        assertThat("length of the snippet is 30.",
+                snippet.find(query, 30).length(),
+                is(30));
+    }
+
+    @Test
+    public void testHilightSnippetWithLength200() {
+        SnippetFinder snippet = new FindUsingWordDistace(document);
+        String expected = "mobile phones making with great product features. " +
+                "Which are durable and provide competing mobile phone features. " +
+                "Micromax makes, offers a good value for money, phones reliable, feature rich and cheap!";
+
+        assertThat("find snippet, length 200.",
+                snippet.find(query, 200),
+                is(expected));
+
+        assertThat("length of the snippet is 200.",
+                snippet.find(query, 200).length(),
+                is(200));
     }
 
     @Test

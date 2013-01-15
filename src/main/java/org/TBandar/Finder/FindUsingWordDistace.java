@@ -17,20 +17,20 @@ public class FindUsingWordDistace extends SnippetFinder {
     }
 
     @Override
-    public String find(String query, int length) {
+    public String find(String query, int snippetLength) {
 
         //document is smaller than required default length.
-        if (document.length() <= length) return oDocument;
+        if (document.length() <= snippetLength) return oDocument;
 
         query = query.toLowerCase();
         List<String> tokens = Lists.newArrayList(Splitter.on(" ").split(query));
 
-        int qlength = tokens.size();
+        int tokensCount = tokens.size();
         int dlength = document.length();
 
-        int[][] snippets = new int[qlength][dlength];
-        int[][] occurrences = new int[qlength][dlength];
-        for (int i = 0; i < qlength; i++) {
+        int[][] snippets = new int[tokensCount][dlength];
+        int[][] occurrences = new int[tokensCount][dlength];
+        for (int i = 0; i < tokensCount; i++) {
             Arrays.fill(snippets[i], -1);
             Arrays.fill(occurrences[i], -1);
         }
@@ -45,10 +45,10 @@ public class FindUsingWordDistace extends SnippetFinder {
         }
 
         //find all the snippets.
-        snippets = calcSnippetRanges(occurrences, snippets, qlength);
+        snippets = calcSnippetRanges(occurrences, snippets, tokensCount);
 
         //find the most relevant snippet, in this case longest.
-        int[] longestSnippet = calcRelevantSnippet(snippets, qlength);
+        int[] longestSnippet = calcRelevantSnippet(snippets, tokensCount, snippetLength);
         String snippet = oDocument.substring(longestSnippet[1], longestSnippet[0])
                         + oDocument.substring(longestSnippet[0]).split(" ")[0];
 
@@ -57,31 +57,37 @@ public class FindUsingWordDistace extends SnippetFinder {
     }
 
     /**
-     * returns the most relevant snippet, in this case the longest.
-     * @param snippets
-     * @param qlength
+     * Returns the most relevant snippet, of the given length.
+     * We identify the smallest snippet of length greater that the required snippetLength,
+     * and then trim out the noise words to fit the length criterion.
+     *
+     * @param snippets snippets that have been identified.
+     * @param tokensCount number of query tokens
+     * @param snippetLength maximum required length of the snippet.
      * @return
      */
-    protected int[] calcRelevantSnippet(int[][] snippets, int qlength) {
-        int snippetIndex = 0, length = 0, result = 0;
-        int[] index = new int[qlength];
+    protected int[] calcRelevantSnippet(int[][] snippets, int tokensCount, int snippetLength) {
+        int snippetIndex = 0, tmpSnippetLength = 0, curSnippetLength = 0, result = 0;
+        int[] indices = new int[tokensCount];
         while (snippets[0][snippetIndex] != -1) {
-            for (int i = 0; i < qlength; i++) {
-                index[i] = snippets[i][snippetIndex];
+            for (int i = 0; i < tokensCount; i++) {
+                indices[i] = snippets[i][snippetIndex];
             }
-            Arrays.sort(index);
-            if (index[qlength - 1] - index[0] > length) {
+            Arrays.sort(indices);
+            curSnippetLength = indices[tokensCount - 1] - indices[0];
+            if (curSnippetLength > tmpSnippetLength) {
                 result = snippetIndex;
-                length = index[qlength - 1] - index[0];
+                tmpSnippetLength = curSnippetLength;
             }
             snippetIndex++;
         }
 
-        for (int i = 0; i < qlength; i++) {
-            index[i] = snippets[i][result];
+        for (int i = 0; i < tokensCount; i++) {
+            indices[i] = snippets[i][result];
         }
-        Arrays.sort(index);
-        return new int[]{ index[qlength - 1], index[0] };
+        Arrays.sort(indices);
+        Log.debug("snippet-relevant indices: {}", indices);
+        return new int[]{ indices[tokensCount - 1], indices[0] };
     }
 
     /**
