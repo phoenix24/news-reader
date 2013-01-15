@@ -2,7 +2,7 @@ package org.TBandar.Finder;
 
 public abstract class SnippetFinder {
 
-    public static final int DEFAULT_SNIPPET_LENGTH = 50;
+    public static final int DEFAULT_SNIPPET_LENGTH = 100;
 
     protected final String document;
     protected final String oDocument;

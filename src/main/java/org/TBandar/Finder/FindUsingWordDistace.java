@@ -67,21 +67,29 @@ public class FindUsingWordDistace extends SnippetFinder {
      * @return
      */
     protected int[] calcRelevantSnippet(int[][] snippets, int tokensCount, int snippetLength) {
-        int snippetIndex = 0, tmpSnippetLength = 0, curSnippetLength = 0, result = 0;
         int[] indices = new int[tokensCount];
+        int snippetIndex = 0, result = 0, pIndex = 0, nIndex = 0,
+                pDiff = Integer.MAX_VALUE, nDiff = Integer.MIN_VALUE;
+
         while (snippets[0][snippetIndex] != -1) {
             for (int i = 0; i < tokensCount; i++) {
                 indices[i] = snippets[i][snippetIndex];
             }
             Arrays.sort(indices);
-            curSnippetLength = indices[tokensCount - 1] - indices[0];
-            if (curSnippetLength > tmpSnippetLength) {
-                result = snippetIndex;
-                tmpSnippetLength = curSnippetLength;
+            int curSnippetLength = indices[tokensCount - 1] - indices[0];
+            int diffLength = curSnippetLength - snippetLength;
+
+            if (diffLength >= 0 && diffLength < pDiff) {
+                pDiff = diffLength;
+                pIndex = snippetIndex;
+            } else if (diffLength < 0 && diffLength > nDiff) {
+                nDiff = diffLength;
+                nIndex = snippetIndex;
             }
             snippetIndex++;
         }
 
+        result = nDiff <= 10 ? nIndex : pIndex;
         for (int i = 0; i < tokensCount; i++) {
             indices[i] = snippets[i][result];
         }
