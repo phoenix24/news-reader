@@ -37,21 +37,31 @@ public class FindUsingWordDistace extends SnippetFinder {
 
         int index = 0, qNumber = -1, qIndex = -1;
         for (String token : tokens) {
-            qIndex = 0;
-            qNumber += 1;
+            qIndex = 0; qNumber += 1;
             while ((index = document.indexOf(token, index + 1)) > -1 && index < document.length()) {
                 if (index > -1) occurances[qNumber][qIndex++] = index;
             }
-
-            System.out.println("tokens : " + Arrays.toString(occurances[qNumber]));
+            Log.debug("tokens {}", Arrays.toString(occurances[qNumber]));
         }
 
+        //find all the snippets.
         snippets = calcSnippetRanges(occurances, snippets, qlength);
+
+        //find the most relevant snippet, in this case longest.
         int[] longestSnippet = calcRelevantSnippet(snippets, qlength);
-        System.out.print(Arrays.toString(longestSnippet));
-        return document.substring(longestSnippet[1], longestSnippet[0]) + document.substring(longestSnippet[0]).split(" ")[0];
+        String snippet = document.substring(longestSnippet[1], longestSnippet[0])
+                        + document.substring(longestSnippet[0]).split(" ")[0];
+
+        Log.debug("snippet-longest:{}, snippet-text:{}", Arrays.toString(longestSnippet), snippet);
+        return snippet;
     }
 
+    /**
+     * returns the most relevant snippet, in this case the longest.
+     * @param snippets
+     * @param qlength
+     * @return
+     */
     protected int[] calcRelevantSnippet(int[][] snippets, int qlength) {
         int snippetIndex = 0, length = 0, result = 0;
         int[] index = new int[qlength];
@@ -71,10 +81,20 @@ public class FindUsingWordDistace extends SnippetFinder {
             index[i] = snippets[i][result];
         }
         Arrays.sort(index);
-        System.out.println("longest-snippet : " + Arrays.toString(index));
         return new int[]{ index[qlength - 1], index[0] };
     }
 
+    /**
+     * Find all the snippets, in the said document.
+     * We basically return the index positions for all the possible snippets possible.
+     *
+     *
+     *
+     * @param occurances
+     * @param snippets
+     * @param qlength
+     * @return
+     */
     protected int[][] calcSnippetRanges(int[][] occurances, int[][] snippets, int qlength) {
         int snippetCount = 0, tokenSmallestIndex = 0, tokenSmallestValue = Integer.MAX_VALUE;
         int[] tokenIndexes = new int[qlength];
@@ -90,19 +110,26 @@ public class FindUsingWordDistace extends SnippetFinder {
             }
             snippetCount += 1;
             tokenIndexes[tokenSmallestIndex]++;
-            System.out.println("tokenSmallestValue:" + tokenSmallestValue + ", tokenSmallestIndex:" + tokenSmallestIndex + ", tokenIndexes:" + Arrays.toString(tokenIndexes));
             tokenSmallestValue = Integer.MAX_VALUE;
-        } while (isScoreAvailable(occurances, tokenIndexes));
+        } while (isSnippetAvailable(occurances, tokenIndexes));
         return snippets;
     }
 
-    protected boolean isScoreAvailable(int[][] occurances, int[] indexes) {
+    /**
+     * Returns true if any more snippets are possible., else false.
+     * Basically, returns true if any of the tokens has a next valid index present.,
+     * such that it can be used to create a new snippet.
+     *
+     * @param occurances
+     * @param indexes
+     * @return
+     */
+    protected boolean isSnippetAvailable(int[][] occurances, int[] indexes) {
         boolean available = false;
 
         for (int i = 0; i < indexes.length; i++) {
             available |= occurances[i][indexes[i]+1] > -1;
         }
-        System.out.println(available + ", " + Arrays.toString(indexes));
         return available;
     }
 }
