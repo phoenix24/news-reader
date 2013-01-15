@@ -87,8 +87,41 @@ public class FindUsingWordDistace extends SnippetFinder {
     /**
      * Find all the snippets, in the said document.
      * We basically return the index positions for all the possible snippets possible.
+     * Note: all of these snippets can also be treated as snippet windows., I realized term much later.
+     *
+     * ex. for these tokens - mobile, phone, cheap; their indexes in the document may be as follow -
+     * mobile : 105,  239
+     * phone : 27, 127, 217
+     * cheap : 34, 131
+     *
+     * Thus, our first snippet is with following indices -
+     * 105,
+     * 27
+     * 34
+     * ^
+     * |---- this is the first snippet, or as I call it snippet-index 0.
      *
      *
+     * To be able to calculate the next snippet, I simply move the smallest index to its next valid occurance., thus
+     * resulting in -
+     *
+     * 105, 105,
+     * 27,  127,
+     * 34,  34,
+     * ^    ^
+     * |    |-----this is the second snippet, or as I call it snippet-index 1.
+     * |----------this is the first snippet, or as I call it snippet-index 0.
+     *
+     * And finally, we get all the snippets which have all the tokens present -
+     * 105, 105, 105, 239, 239,
+     * 27,  127, 127, 127, 217,
+     * 34,  34,  131, 131, 131,
+     * ^    ^     ^    ^    ^
+     * |    |     |    |    |-------- fifth snippet, snippet-index 4.
+     * |    |     |    |------------- fourth snippet, snippet-index 3.
+     * |    |     |------------------ third snippet, snippet-index 2.
+     * |    |------------------------ second snippet, snippet-index 1.
+     * |-----------------------------  first snippet, snippet-index 0.
      *
      * @param occurances
      * @param snippets
@@ -97,21 +130,21 @@ public class FindUsingWordDistace extends SnippetFinder {
      */
     protected int[][] calcSnippetRanges(int[][] occurances, int[][] snippets, int qlength) {
         int snippetCount = 0, tokenSmallestIndex = 0, tokenSmallestValue = Integer.MAX_VALUE;
-        int[] tokenIndexes = new int[qlength];
+        int[] tokenIndices = new int[qlength];
 
         do {
             for (int i = 0; i < qlength; i++) {
-                snippets[i][snippetCount] = occurances[i][tokenIndexes[i]];
-                if (occurances[i][tokenIndexes[i]] <= tokenSmallestValue && occurances[i][tokenIndexes[i]+1] != -1) {
+                snippets[i][snippetCount] = occurances[i][tokenIndices[i]];
+                if (occurances[i][tokenIndices[i]] <= tokenSmallestValue && occurances[i][tokenIndices[i]+1] != -1) {
                     tokenSmallestIndex = i;
-                    tokenSmallestValue = occurances[i][tokenIndexes[i]];
+                    tokenSmallestValue = occurances[i][tokenIndices[i]];
                 }
                 System.out.println(Arrays.toString(snippets[i]));
             }
             snippetCount += 1;
-            tokenIndexes[tokenSmallestIndex]++;
+            tokenIndices[tokenSmallestIndex]++;
             tokenSmallestValue = Integer.MAX_VALUE;
-        } while (isSnippetAvailable(occurances, tokenIndexes));
+        } while (isSnippetAvailable(occurances, tokenIndices));
         return snippets;
     }
 
