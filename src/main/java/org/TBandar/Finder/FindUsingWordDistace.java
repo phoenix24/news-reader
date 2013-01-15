@@ -29,23 +29,23 @@ public class FindUsingWordDistace extends SnippetFinder {
         int dlength = document.length();
 
         int[][] snippets = new int[qlength][dlength];
-        int[][] occurances = new int[qlength][dlength];
+        int[][] occurrences = new int[qlength][dlength];
         for (int i = 0; i < qlength; i++) {
             Arrays.fill(snippets[i], -1);
-            Arrays.fill(occurances[i], -1);
+            Arrays.fill(occurrences[i], -1);
         }
 
         int index = 0, qNumber = -1, qIndex = -1;
         for (String token : tokens) {
             qIndex = 0; qNumber += 1;
             while ((index = document.indexOf(token, index + 1)) > -1 && index < document.length()) {
-                if (index > -1) occurances[qNumber][qIndex++] = index;
+                if (index > -1) occurrences[qNumber][qIndex++] = index;
             }
-            Log.debug("tokens {}", Arrays.toString(occurances[qNumber]));
+            Log.debug("tokens {}", Arrays.toString(occurrences[qNumber]));
         }
 
         //find all the snippets.
-        snippets = calcSnippetRanges(occurances, snippets, qlength);
+        snippets = calcSnippetRanges(occurrences, snippets, qlength);
 
         //find the most relevant snippet, in this case longest.
         int[] longestSnippet = calcRelevantSnippet(snippets, qlength);
@@ -116,13 +116,13 @@ public class FindUsingWordDistace extends SnippetFinder {
      * |----------this is the first snippet, or as I call it snippet-index 0.
      *
      * And finally, we get all the snippets which have all the tokens present -
-     * 105, 105, 105, 239, 239,
-     * 27,  127, 127, 127, 217,
-     * 34,  34,  131, 131, 131,
+     * 105, 105, 105, 239, 239,  <-- mobile  (occurrences of the token).
+     * 27 , 127, 127, 127, 217,  <-- phone
+     * 34 , 34 , 131, 131, 131,  <-- cheap
      * ^    ^     ^    ^    ^
      * |    |     |    |    |-------- fifth snippet, snippet-index 4.
      * |    |     |    |------------- fourth snippet, snippet-index 3.
-     * |    |     |------------------ third snippet, snippet-index 2.
+     * |    |     |------------------ third  snippet, snippet-index 2.
      * |    |------------------------ second snippet, snippet-index 1.
      * |-----------------------------  first snippet, snippet-index 0.
      *
