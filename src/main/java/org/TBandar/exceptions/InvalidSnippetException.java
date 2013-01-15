@@ -1,4 +1,4 @@
-package org.TBandar.Decorator;
+package org.TBandar.exceptions;
 
 public class InvalidSnippetException extends Throwable {
     public InvalidSnippetException() {

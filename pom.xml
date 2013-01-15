@@ -8,9 +8,6 @@
     <artifactId>snippet-finder</artifactId>
     <version>1.0</version>
 
-
-
-
     <!-- test dependencies. -->
     <dependencies>
         <dependency>
@@ -19,12 +16,27 @@
             <version>4.8.2</version>
         </dependency>
 
+        <!-- utils and logging dependencies. -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>14.0-rc1</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.7</version>
+        </dependency>
     </dependencies>
-
 
 </project>
