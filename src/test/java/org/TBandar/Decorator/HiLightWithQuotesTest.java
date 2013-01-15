@@ -28,7 +28,7 @@ public class HiLightWithQuotesTest {
     @Test
     public void testDecorateWithTestData2() throws Exception {
         snippet = "MicroMax Phones are ... mobile cheap!";
-        String expected = "'MicroMax' Phones are ... 'mobile' 'cheap'!";
+        String expected = "'MicroMax' Phones are ... 'mobile cheap'!";
         assertThat(hiLighter.decorate(snippet, query), is(expected));
     }
 

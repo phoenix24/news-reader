@@ -30,7 +30,7 @@ public class HiLightWithMarkUpTest {
     public void testDecorateWithTestData2() throws Exception {
         snippet = "MicroMax Phones are ... mobile cheap!";
         String expected = "[[HIGHLIGHT]]MicroMax[[ENDHIGHLIGHT]] Phones are ... " +
-                          "[[HIGHLIGHT]]mobile[[ENDHIGHLIGHT]] [[HIGHLIGHT]]cheap[[ENDHIGHLIGHT]]!";
+                          "[[HIGHLIGHT]]mobile cheap[[ENDHIGHLIGHT]]!";
         assertThat(hiLighter.decorate(snippet, query), is(expected));
     }
 
@@ -41,5 +41,4 @@ public class HiLightWithMarkUpTest {
                           " ... [[HIGHLIGHT]]cheap[[ENDHIGHLIGHT]]!";
         assertThat(hiLighter.decorate(snippet, query), is(expected));
     }
-
 }

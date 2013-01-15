@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class FindUsingWordDistanceTest {
+public class SnippetWordDistanceTest {
 
     private String query;
     private String document;
@@ -26,7 +26,7 @@ public class FindUsingWordDistanceTest {
 
     @Test
     public void testHilightSnippetWithDefaultLength() {
-        SnippetFinder snippet = new FindUsingWordDistace(document);
+        SnippetFinder snippet = new SnippetWordDistace(document);
         String expected = "ap mobile phones in the market few companies provide products worth their money. " +
                 "Micromax, offer cheap";
 
@@ -41,7 +41,7 @@ public class FindUsingWordDistanceTest {
 
     @Test
     public void testHilightSnippetWithLength30() {
-        SnippetFinder snippet = new FindUsingWordDistace(document);
+        SnippetFinder snippet = new SnippetWordDistace(document);
         String expected = "Micromax, offer cheap mobile phones";
 
         assertThat("find snippet, length 30.",
@@ -55,7 +55,7 @@ public class FindUsingWordDistanceTest {
 
     @Test
     public void testHilightSnippetWithLength150() {
-        SnippetFinder snippet = new FindUsingWordDistace(document);
+        SnippetFinder snippet = new SnippetWordDistace(document);
         String expected = "icromax, offer cheap mobile phones making with great product features. " +
                 "Which are durable and provide competing mobile phone features. Micromax makes,";
 
@@ -70,7 +70,7 @@ public class FindUsingWordDistanceTest {
 
     @Test
     public void testHilightSnippetWithLength200() {
-        SnippetFinder snippet = new FindUsingWordDistace(document);
+        SnippetFinder snippet = new SnippetWordDistace(document);
         String expected = "ap mobile phones making with great product features. " +
                 "Which are durable and provide competing mobile phone features. " +
                 "Micromax makes, offers a good value for money, phones reliable, feature rich and cheap!";
@@ -86,7 +86,7 @@ public class FindUsingWordDistanceTest {
 
     @Test
     public void testHilightSnippet1() {
-        SnippetFinder snippet = new FindUsingWordDistace("Little star's deep dish pizza sure is fantastic.");
+        SnippetFinder snippet = new SnippetWordDistace("Little star's deep dish pizza sure is fantastic.");
         String expected = "Little star's deep dish pizza sure is fantastic.";
 
         assertThat("find snippet, using default snippet length",

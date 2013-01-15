@@ -28,7 +28,7 @@ public class HiLightWithHTMLTest {
     @Test
     public void testDecorateWithTestData2() throws Exception {
         snippet = "MicroMax Phones are ... mobile cheap!";
-        String expected = "<b>MicroMax</b> Phones are ... <b>mobile</b> <b>cheap</b>!";
+        String expected = "<b>MicroMax</b> Phones are ... <b>mobile cheap</b>!";
         assertThat(hiLighter.decorate(snippet, query), is(expected));
     }
 

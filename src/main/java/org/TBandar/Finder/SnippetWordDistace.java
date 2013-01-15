@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-public class FindUsingWordDistace extends SnippetFinder {
+public class SnippetWordDistace extends SnippetFinder {
 
-    private final static Logger Log = LoggerFactory.getLogger(FindUsingWordDistace.class);
+    private final static Logger Log = LoggerFactory.getLogger(SnippetWordDistace.class);
 
-    public FindUsingWordDistace(String document) {
+    public SnippetWordDistace(String document) {
         super(document);
     }
 

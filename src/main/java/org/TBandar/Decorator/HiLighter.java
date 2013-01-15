@@ -49,6 +49,9 @@ public abstract class HiLighter {
                 lhilighted = hilighted.toLowerCase();
             }
         }
+        hilighted = hilighted.replaceAll(getDuplicateTags(), " ");
         return hilighted;
     }
+
+    protected abstract String getDuplicateTags();
 }
