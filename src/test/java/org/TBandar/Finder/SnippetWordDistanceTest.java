@@ -97,4 +97,36 @@ public class SnippetWordDistanceTest {
                 snippet.find(query, 100).length(),
                 equalTo(expected.length()));
     }
+
+    @Test
+    public void testTrimpSnippet() {
+        SnippetWordDistace finder = new SnippetWordDistace(document.substring(0, 10));
+        int[] actual = finder.trimSnippet(new int[]{4, 10}, 10);
+        int[] expected = new int[]{10, 1};
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void testTrimpSnippet1() {
+        SnippetWordDistace finder = new SnippetWordDistace(document.substring(0, 10));
+        int[] actual = finder.trimSnippet(new int[]{4, 8}, 10);
+        int[] expected = new int[]{10, 1};
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void testTrimpSnippet2() {
+        SnippetWordDistace finder = new SnippetWordDistace(document.substring(0, 100));
+        int[] actual = finder.trimSnippet(new int[]{4, 34}, 30);
+        int[] expected = new int[]{34, 4};
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void testTrimpSnippet3() {
+        SnippetWordDistace finder = new SnippetWordDistace(document.substring(0, 100));
+        int[] actual = finder.trimSnippet(new int[]{4, 34}, 40);
+        int[] expected = new int[]{39, 0};
+        assertThat(actual, is(expected));
+    }
 }

@@ -99,9 +99,7 @@ public class SnippetWordDistace extends SnippetFinder {
         int start = indices[0], stop = indices[indices.length - 1];
         int diff = (snippetLength - (stop - start)) / 2;
 
-        Log.debug("remaining-length : {}, indices:{}", diff, Arrays.toString(indices));
         while (diff != 0 && (stop - start < document.length())) {
-
             //move the start index.
             int u1diff = start - diff < 0 ? start : diff;
             start -= u1diff;
